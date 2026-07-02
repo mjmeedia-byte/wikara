@@ -1,0 +1,21 @@
+{
+  "name": "wikara",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wikara — a Chrome extension that enhances Wikipedia, plus its companion website.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.5.0"
+  }
+}

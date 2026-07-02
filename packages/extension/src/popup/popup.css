@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+}
+
+.wikara-popup {
+  position: relative;
+  width: 300px;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+}
+
+.wikara-popup-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-accent);
+}
+
+.wikara-popup h1 {
+  margin: 0 0 var(--space-2);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.wikara-popup p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}

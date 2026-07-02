@@ -27,6 +27,23 @@ A running log of what's been built, phase by phase.
 
 ---
 
-## Next up: Phase 2 — Extension scaffold
+## Phase 2 — Extension scaffold
 
-React + Vite + TypeScript + CRXJS (Manifest V3), the sidebar UI shell, settings storage, and the settings panel.
+**Status:** ✅ Complete — July 2, 2026
+
+- **2.1** Turned `packages/extension` into a real Manifest V3 Chrome extension with Vite + CRXJS: manifest (content script on `*://*.wikipedia.org/wiki/*`, background service worker, popup), permissions `storage` / `activeTab` / `scripting`.
+- **2.2** Built the sidebar shell, injected into every Wikipedia article inside a shadow root (isolated from Wikipedia's styles): top stripe, header (title, quality badge placeholder, Aa / settings / close), AI / Sources / Reading tabs, footer (Upgrade, version, Settings). Full design system via CSS tokens.
+- **2.3** Added the settings shape + defaults to `packages/shared`, and `chrome.storage.local` get/save helpers in the extension.
+- **2.4** Built the settings panel (reading presets, theme tiles, font family/size, line height/width sliders, letter spacing, image display, sidebar position). Typography changes apply to the article instantly and persist across reloads.
+- **2.5** Loaded the unpacked extension in Chrome, confirmed the sidebar appears and the settings work live.
+
+### Notes
+
+- Color themes (Sepia, Dusk, etc.) and dark mode currently save the choice but don't recolor the article yet — that's built in Phase 4.
+- Dev loop: `npm run build:ext` → click ↻ on the Wikara card in `chrome://extensions` → refresh the page.
+
+---
+
+## Next up: Phase 3 — Supabase setup
+
+Accounts and database: create the Supabase project, add environment variables, run the schema, set up Row Level Security, and add sign-in to the extension.

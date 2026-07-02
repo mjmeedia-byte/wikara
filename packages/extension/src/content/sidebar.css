@@ -1,0 +1,331 @@
+/* Wikara sidebar — injected into the Wikipedia page inside a shadow root. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.wikara-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  height: 100vh;
+  background: var(--color-bg-primary);
+  border-left: 0.5px solid var(--color-border);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+}
+
+/* Left-positioned sidebar */
+.wikara-sidebar.pos-left {
+  right: auto;
+  left: 0;
+  border-left: none;
+  border-right: 0.5px solid var(--color-border);
+}
+
+.wikara-stripe {
+  flex-shrink: 0;
+  height: 3px;
+  background: var(--color-accent);
+}
+
+.wikara-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.wikara-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.wikara-title {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wikara-badge {
+  flex-shrink: 0;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.wikara-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.wikara-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease;
+}
+
+.wikara-icon-btn:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+}
+
+.wikara-icon-btn.is-active {
+  color: #ffffff;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.wikara-tabs {
+  display: flex;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.wikara-tab {
+  flex: 1;
+  padding: var(--space-3) var(--space-2);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.wikara-tab:hover {
+  color: var(--color-text-primary);
+}
+
+.wikara-tab.is-active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.wikara-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+.wikara-empty {
+  padding: var(--space-6) var(--space-3);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.wikara-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-top: 0.5px solid var(--color-border);
+}
+
+.wikara-upgrade {
+  width: 100%;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.wikara-upgrade:hover {
+  background: var(--color-accent-hover);
+}
+
+.wikara-footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.wikara-link {
+  padding: 0;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wikara-link:hover {
+  color: var(--color-text-primary);
+}
+
+/* Small tab shown at the screen edge after the sidebar is closed. */
+.wikara-reopen {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  z-index: 2147483000;
+  width: 32px;
+  height: 40px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ---------- Settings panel ---------- */
+
+.wk-settings {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.wk-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  font-weight: 600;
+  border-bottom: 0.5px solid var(--color-border);
+}
+
+.wk-settings-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.wk-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wk-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+/* Segmented button group */
+.wk-seg {
+  display: flex;
+  gap: var(--space-1);
+  padding: 2px;
+  background: var(--color-bg-secondary);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.wk-seg-btn {
+  flex: 1;
+  padding: var(--space-2) 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    color 150ms ease;
+}
+
+.wk-seg-btn:hover {
+  color: var(--color-accent);
+}
+
+.wk-seg-btn.is-active {
+  color: #ffffff;
+  background: var(--color-accent);
+}
+
+/* Theme tiles */
+.wk-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.wk-tile {
+  padding: var(--space-2);
+  font-size: 11px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.wk-tile:hover {
+  border-color: var(--color-accent);
+}
+
+.wk-tile.is-active {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+/* Sliders */
+.wk-slider {
+  width: 100%;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}

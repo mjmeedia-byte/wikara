@@ -24,4 +24,5 @@ export default defineManifest({
     },
   ],
   permissions: ['storage', 'activeTab', 'scripting'],
+  host_permissions: ['https://*.supabase.co/*'],
 });

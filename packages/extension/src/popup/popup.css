@@ -11,6 +11,14 @@ body {
   background: var(--color-bg-primary);
 }
 
+/* Centered layout for sign-in / account / celebration screens. */
+.wk-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .wikara-popup-stripe {
   position: absolute;
   top: 0;
@@ -20,15 +28,223 @@ body {
   background: var(--color-accent);
 }
 
+.wk-mascot-svg {
+  display: block;
+  margin: var(--space-2) auto 0;
+}
+
 .wikara-popup h1 {
-  margin: 0 0 var(--space-2);
+  margin: var(--space-2) 0 var(--space-1);
   font-size: 18px;
   font-weight: 700;
 }
 
-.wikara-popup p {
-  margin: 0;
+.wk-sub {
+  margin: 0 0 var(--space-4);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+/* ---- Auth form ---- */
+
+.wk-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.wk-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 var(--space-3);
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.wk-input:focus {
+  border-color: var(--color-accent);
+}
+
+.wk-btn {
+  width: 100%;
+  height: 40px;
+  margin-top: var(--space-1);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.wk-btn:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.wk-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.wk-link {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wk-link:hover {
+  color: var(--color-text-primary);
+}
+
+.wk-error {
+  margin: var(--space-3) 0 0;
+  font-size: 12px;
+  color: #b3261e;
+}
+
+.wk-info {
+  margin: var(--space-3) 0 0;
+  font-size: 12px;
+  color: var(--color-accent);
+}
+
+.wk-signed-in {
+  margin: var(--space-3) 0 var(--space-4);
   font-size: 13px;
   line-height: 1.5;
   color: var(--color-text-secondary);
+}
+
+/* ---- Onboarding wizard ---- */
+
+.wk-onb {
+  display: flex;
+  flex-direction: column;
+}
+
+.wk-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.wk-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background 150ms ease;
+}
+
+.wk-dot.is-on {
+  background: var(--color-accent);
+}
+
+.wk-progress-label {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.wk-q {
+  margin: 0 0 var(--space-4);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.wk-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.wk-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.wk-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.wk-option:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-secondary);
+}
+
+.wk-options-grid .wk-option {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-2);
+  text-align: center;
+}
+
+.wk-option-icon {
+  font-size: 22px;
+}
+
+.wk-option-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.wk-option-label {
+  font-weight: 600;
+}
+
+.wk-option-hint {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.wk-back {
+  align-self: flex-start;
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.wk-back:hover {
+  color: var(--color-text-primary);
+}
+
+.wk-skip {
+  margin-top: var(--space-4);
 }

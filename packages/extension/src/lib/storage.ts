@@ -1,4 +1,4 @@
-import { defaultSettings, type WikaraSettings } from '@wikara/shared';
+import { defaultSettings, type WikaraSettings, type Plan } from '@wikara/shared';
 
 // ---- Reading settings ----
 const SETTINGS_KEY = 'wikara:settings';
@@ -33,4 +33,20 @@ export async function getOnboarding(): Promise<OnboardingState> {
 /** Save onboarding state. */
 export async function saveOnboarding(state: OnboardingState): Promise<void> {
   await chrome.storage.local.set({ [ONBOARDING_KEY]: state });
+}
+
+// ---- Plan (cached copy of the user's Supabase plan) ----
+// Kept here (no Supabase import) so the content script can read it without
+// bundling the whole auth library.
+const PLAN_KEY = 'wikara:plan';
+
+/** Read the cached plan. Defaults to 'free'. */
+export async function getCachedPlan(): Promise<Plan> {
+  const stored = await chrome.storage.local.get(PLAN_KEY);
+  return (stored[PLAN_KEY] as Plan | undefined) ?? 'free';
+}
+
+/** Cache the plan locally. */
+export async function setCachedPlan(plan: Plan): Promise<void> {
+  await chrome.storage.local.set({ [PLAN_KEY]: plan });
 }

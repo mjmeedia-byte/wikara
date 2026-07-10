@@ -4,7 +4,7 @@ import { Mascot } from './Mascot';
 
 type Mode = 'signin' | 'signup';
 
-/** The first screen: sign in or create an account (email + password). */
+/** First screen: sign in or create an account with email + password. */
 export function SignIn() {
   const [mode, setMode] = useState<Mode>('signin');
   const [email, setEmail] = useState('');
@@ -20,15 +20,15 @@ export function SignIn() {
     setMessage(null);
     try {
       if (mode === 'signup') {
-        const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
-        if (signUpError) throw signUpError;
+        const { data, error: err } = await supabase.auth.signUp({ email, password });
+        if (err) throw err;
         if (!data.session) {
           setMessage('Account created. Check your email to confirm, then log in.');
           setMode('signin');
         }
       } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-        if (signInError) throw signInError;
+        const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+        if (err) throw err;
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.');

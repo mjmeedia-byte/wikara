@@ -4,3 +4,4 @@ build
 .next
 out
 package-lock.json
+games/pixel-surf/vendor/

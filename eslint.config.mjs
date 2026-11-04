@@ -12,10 +12,36 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/.next/**',
       '**/out/**',
+      'games/pixel-surf/vendor/**',
     ],
   },
   // Recommended rules for plain JavaScript.
   js.configs.recommended,
   // Recommended rules for TypeScript.
   ...tseslint.configs.recommended,
+  // Pixel Surf 64 is a plain browser game: classic scripts (no bundler, no modules).
+  {
+    files: ['games/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        performance: 'readonly',
+        setTimeout: 'readonly',
+        THREE: 'readonly',
+        Ocean: 'writable',
+        Surfer: 'writable',
+        Sfx: 'writable',
+        Scene3D: 'writable',
+        module: 'writable',
+        require: 'readonly',
+      },
+    },
+    rules: {
+      // Each script declares its own top-level global (Ocean, Surfer, ...), which is intended.
+      'no-redeclare': 'off',
+    },
+  },
 );

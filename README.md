@@ -10,6 +10,10 @@ This is a monorepo managed with npm workspaces:
 - `packages/website` — the marketing site + dashboard (Next.js 14)
 - `packages/shared` — TypeScript types and utilities shared by both
 
+Separate from Wikara, and not part of the npm workspaces:
+
+- `daily-limits` — a standalone Chrome extension (plain JavaScript, no build step) that sets daily time limits on distracting sites. See `daily-limits/README.md`.
+
 ## Getting started
 
 Install everything from the project root:

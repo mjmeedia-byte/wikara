@@ -1,0 +1,108 @@
+/*
+ * Injected into youtube.com. Three jobs:
+ *   1. cover the player while a video is being classified   (html.dl-pending)
+ *   2. hide every Shorts surface, always
+ *   3. hide the home feed and recommendations once the entertainment limit
+ *      is used up                                            (html.dl-exhausted)
+ *
+ * YouTube renames its elements from time to time. If Shorts or the feed show
+ * up again, this file is the place to add the new selector. Blocking itself
+ * does not depend on these rules: Shorts URLs and entertainment watch pages
+ * are stopped by the service worker regardless of what is visible.
+ */
+
+/* 1. Player cover ---------------------------------------------------------- */
+
+html.dl-pending #movie_player,
+html.dl-pending .html5-video-player,
+html.dl-pending video {
+  visibility: hidden !important;
+}
+
+html.dl-pending::after {
+  content: 'Checking this video…';
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: rgba(22, 24, 28, 0.92);
+  color: #e6e8eb;
+  font:
+    13px/1.3 system-ui,
+    sans-serif;
+  pointer-events: none;
+}
+
+/* A Shorts URL is on its way to the block page. */
+html.dl-cover body {
+  display: none !important;
+}
+
+/* 2. Shorts, everywhere ---------------------------------------------------- */
+
+/* Shelves on home, search and channel pages */
+ytd-reel-shelf-renderer,
+ytd-rich-shelf-renderer[is-shorts],
+ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
+ytd-rich-section-renderer:has(a[href^='/shorts/']),
+grid-shelf-view-model:has(a[href^='/shorts/']),
+ytm-reel-shelf-renderer,
+
+/* Individual Shorts mixed into feeds and search results */
+ytd-video-renderer:has(a[href^='/shorts/']),
+ytd-grid-video-renderer:has(a[href^='/shorts/']),
+ytd-rich-item-renderer:has(a[href^='/shorts/']),
+ytd-compact-video-renderer:has(a[href^='/shorts/']),
+ytd-reel-item-renderer,
+ytm-shorts-lockup-view-model,
+ytm-shorts-lockup-view-model-v2,
+
+/* Sidebar link (full and collapsed sidebar) and mobile bottom bar */
+ytd-guide-entry-renderer:has(a[title='Shorts']),
+ytd-guide-entry-renderer:has(a[href^='/shorts']),
+ytd-mini-guide-entry-renderer[aria-label='Shorts'],
+ytd-mini-guide-entry-renderer:has(a[title='Shorts']),
+ytd-mini-guide-entry-renderer:has(a[href^='/shorts']),
+ytm-pivot-bar-item-renderer:has(.pivot-shorts),
+
+/* Shorts tab on channel pages, Shorts filter chip in search */
+yt-tab-shape[tab-title='Shorts'],
+tp-yt-paper-tab:has(a[href$='/shorts']),
+yt-chip-cloud-chip-renderer:has([title='Shorts']) {
+  display: none !important;
+}
+
+/* 3. Entertainment limit used up ------------------------------------------- */
+
+/* Home feed */
+html.dl-exhausted ytd-browse[page-subtype='home'] ytd-rich-grid-renderer,
+html.dl-exhausted ytd-browse[page-subtype='home'] #contents,
+html.dl-exhausted ytm-browse .rich-grid-renderer-contents,
+
+/* Recommendation sidebar next to a video */
+html.dl-exhausted #related,
+html.dl-exhausted #secondary ytd-watch-next-secondary-results-renderer,
+html.dl-exhausted ytd-watch-next-secondary-results-renderer,
+html.dl-exhausted ytm-item-section-renderer[section-identifier='related-items'],
+
+/* Suggestions shown inside the player when a video ends */
+html.dl-exhausted .ytp-endscreen-content,
+html.dl-exhausted .ytp-fullscreen-grid,
+html.dl-exhausted .ytp-ce-element,
+html.dl-exhausted .ytp-suggestion-set {
+  display: none !important;
+}
+
+html.dl-exhausted ytd-browse[page-subtype='home']::before {
+  content: 'YouTube entertainment is done for today. Search and educational videos still work.';
+  display: block;
+  padding: 48px 24px;
+  text-align: center;
+  color: #888;
+  font:
+    15px/1.5 system-ui,
+    sans-serif;
+}

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daily Limits · Settings</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="options">
+    <main>
+      <header>
+        <h1>Daily Limits</h1>
+        <p class="lede">
+          Changes that make things stricter apply immediately. Changes that make things looser
+          (buttons ending in “…”) need a typing challenge and then wait
+          <span id="delayLabel">24 hours</span>.
+        </p>
+      </header>
+
+      <div id="dev" class="banner" hidden>
+        Developer fast mode is on: one minute of limit lasts one second and the delay is shortened.
+        Turn it off in src/lib/config.js before real use.
+      </div>
+
+      <section aria-labelledby="pendingTitle">
+        <h2 id="pendingTitle">Pending changes</h2>
+        <p class="muted">Queued loosening changes. Cancelling one is immediate.</p>
+        <ul id="pendingList" class="list"></ul>
+        <p id="pendingEmpty" class="empty">Nothing is pending.</p>
+      </section>
+
+      <section aria-labelledby="sitesTitle">
+        <h2 id="sitesTitle">Sites</h2>
+        <p class="muted">
+          Daily limit in minutes. 0 means always blocked. Subdomains count toward the same site.
+        </p>
+        <ul id="siteList" class="list"></ul>
+        <p id="siteEmpty" class="empty">No sites yet.</p>
+        <form id="addSite" class="form">
+          <input
+            id="siteDomain"
+            type="text"
+            placeholder="reddit.com"
+            aria-label="Domain to limit"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <label>
+            <input id="siteLimit" type="number" min="0" max="1440" value="30" />
+            <span id="siteUnit">min</span>
+          </label>
+          <button type="submit" class="primary">Add site</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="ytTitle">
+        <h2 id="ytTitle">YouTube</h2>
+        <p class="muted">
+          Shorts are always blocked. Videos from educational channels, and videos in YouTube’s
+          Education or Science &amp; Technology categories, are free. Everything else, including
+          browsing the feed, uses this allowance. Search is never counted.
+        </p>
+        <ul id="ytList" class="list"></ul>
+      </section>
+
+      <section aria-labelledby="chTitle">
+        <h2 id="chTitle">Educational channels</h2>
+        <p class="muted">
+          Matched by channel ID or handle, never by display name. Removing is immediate.
+        </p>
+        <ul id="channelList" class="list"></ul>
+        <p id="channelEmpty" class="empty">No channels listed.</p>
+        <form id="addChannel" class="form">
+          <input
+            id="channelInput"
+            type="text"
+            placeholder="@handle, channel URL or UC… ID"
+            aria-label="Channel handle, URL or ID"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <input
+            id="channelName"
+            type="text"
+            placeholder="Label (optional)"
+            aria-label="Label for the channel"
+            autocomplete="off"
+          />
+          <button type="submit">Add channel…</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="allowTitle">
+        <h2 id="allowTitle">Always allowed</h2>
+        <p class="muted">
+          Never counted, never blocked, and cannot be added to the site list. Removing is immediate.
+        </p>
+        <ul id="allowedList" class="list"></ul>
+        <p id="allowedEmpty" class="empty">No sites listed.</p>
+        <form id="addAllowed" class="form">
+          <input
+            id="allowedDomain"
+            type="text"
+            placeholder="example.org"
+            aria-label="Domain to always allow"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button type="submit">Add site…</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="frictionTitle">
+        <h2 id="frictionTitle">Friction</h2>
+        <p class="muted">
+          What a loosening change costs. Changing these, in either direction, is itself a loosening
+          change.
+        </p>
+        <form id="frictionForm" class="form">
+          <label>
+            <span>Challenge length</span>
+            <input id="frictionLength" type="number" />
+            <span>characters</span>
+          </label>
+          <label>
+            <span>Delay</span>
+            <input id="frictionHours" type="number" />
+            <span>hours</span>
+          </label>
+          <button type="submit">Change…</button>
+        </form>
+      </section>
+
+      <section aria-labelledby="backupTitle">
+        <h2 id="backupTitle">Backup</h2>
+        <p class="muted">
+          Exporting is free. Importing or resetting replaces every setting, so both count as
+          loosening.
+        </p>
+        <div class="form">
+          <button id="exportBtn" type="button">Export settings</button>
+          <button id="importBtn" type="button">Import…</button>
+          <button id="resetBtn" type="button">Reset to defaults…</button>
+          <input id="importFile" type="file" accept="application/json,.json" hidden />
+        </div>
+      </section>
+    </main>
+
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <dialog id="challenge" aria-labelledby="chHeading">
+      <h2 id="chHeading">Type this text to continue</h2>
+      <p id="chSummary" class="what"></p>
+      <p class="muted">
+        When you finish, the change is queued and takes effect after
+        <span id="chDelay"></span>. You can cancel it any time before then. Capitals matter; spaces
+        and line breaks do not. Pasting is disabled.
+      </p>
+      <canvas
+        id="chCanvas"
+        aria-label="Random text to type. It is drawn as an image on purpose."
+      ></canvas>
+      <textarea
+        id="chInput"
+        aria-label="Type the text shown above"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      ></textarea>
+      <p id="chNote" class="error-text" role="alert"></p>
+      <div class="challenge-foot">
+        <span id="chProgress" class="grow num muted"></span>
+        <button id="chCancel" type="button">Cancel</button>
+        <button id="chSubmit" type="button" class="primary" disabled>Queue change</button>
+      </div>
+    </dialog>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

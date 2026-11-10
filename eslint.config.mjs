@@ -18,4 +18,32 @@ export default tseslint.config(
   js.configs.recommended,
   // Recommended rules for TypeScript.
   ...tseslint.configs.recommended,
+  // daily-limits is a standalone plain-JavaScript extension with no build
+  // step. These are the browser and extension globals its files use.
+  {
+    files: ['daily-limits/**/*.js'],
+    languageOptions: {
+      globals: Object.fromEntries(
+        [
+          'chrome',
+          'console',
+          'crypto',
+          'document',
+          'location',
+          'window',
+          'getComputedStyle',
+          'structuredClone',
+          'setTimeout',
+          'clearTimeout',
+          'setInterval',
+          'Blob',
+          'CustomEvent',
+          'HTMLMediaElement',
+          'HTMLVideoElement',
+          'URL',
+          'URLSearchParams',
+        ].map((name) => [name, 'readonly']),
+      ),
+    },
+  },
 );

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blocked</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="blocked">
+    <main>
+      <div class="mark" aria-hidden="true"></div>
+      <h1 id="title">Blocked</h1>
+      <p id="detail"></p>
+      <dl id="facts" class="facts" hidden>
+        <div>
+          <dt>Used today</dt>
+          <dd id="used" class="num"></dd>
+        </div>
+        <div>
+          <dt>Daily limit</dt>
+          <dd id="limit" class="num"></dd>
+        </div>
+        <div id="resetRow">
+          <dt>Resets</dt>
+          <dd id="reset" class="num"></dd>
+        </div>
+      </dl>
+      <p id="back" hidden><a id="backLink" rel="noreferrer"></a></p>
+    </main>
+    <script type="module" src="blocked.js"></script>
+  </body>
+</html>

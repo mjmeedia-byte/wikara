@@ -4,6 +4,7 @@ import {
   applyOp,
   classifyOp,
   defaultSettings,
+  migrateSettings,
   sanitizeSettings,
   splitDue,
 } from '../src/lib/settings.js';
@@ -20,7 +21,7 @@ test('defaults: seeded channels and always-allowed sites', () => {
   assert.equal(s.eduChannels.length, 10);
   assert.ok(s.eduChannels.every((c) => /^UC[\w-]{22}$/.test(c.id)));
   assert.deepEqual(s.allowed, ['khanacademy.org', 'wikipedia.org']);
-  assert.deepEqual(s.friction, { challengeLength: 150, delayHours: 24 });
+  assert.deepEqual(s.friction, { challengeLength: 10, delayHours: 0 });
   assert.deepEqual(sanitizeSettings(s), { settings: s, problems: [] });
 });
 
@@ -76,7 +77,8 @@ test('no-ops and invalid requests', () => {
     { kind: 'addChannel', input: 'Khan Academy' }, // display names are refused
     { kind: 'addChannel', input: 'UC4a-Gbdw7vOaccHmFo40b9g' }, // already listed
     { kind: 'setFriction', challengeLength: 1, delayHours: 24 },
-    { kind: 'setFriction', challengeLength: 150, delayHours: 0 },
+    { kind: 'setFriction', challengeLength: 9, delayHours: 0 },
+    { kind: 'setFriction', challengeLength: 150, delayHours: -1 },
     { kind: 'replaceAll', settings: { sites: 'nope' } },
     { kind: 'nonsense' },
     null,
@@ -155,4 +157,24 @@ test('splitDue', () => {
     rest.map((p) => p.id),
     ['c'],
   );
+});
+
+test('migration: old default friction moves to the new defaults, custom friction is kept', () => {
+  const old = {
+    ...defaultSettings(),
+    version: 1,
+    friction: { challengeLength: 150, delayHours: 24 },
+  };
+  old.sites = { 'reddit.com': 30 };
+  const moved = migrateSettings(old, 1);
+  assert.deepEqual(moved.friction, { challengeLength: 10, delayHours: 0 });
+  assert.deepEqual(moved.sites, { 'reddit.com': 30 });
+  assert.equal(moved.version, 2);
+  assert.deepEqual(old.friction, { challengeLength: 150, delayHours: 24 }, 'input not mutated');
+
+  const custom = { ...old, friction: { challengeLength: 300, delayHours: 48 } };
+  assert.deepEqual(migrateSettings(custom, 1).friction, { challengeLength: 300, delayHours: 48 });
+
+  // Once on version 2, a deliberate choice of 150 / 24 is left alone.
+  assert.deepEqual(migrateSettings(old, 2).friction, { challengeLength: 150, delayHours: 24 });
 });

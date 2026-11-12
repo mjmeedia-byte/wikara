@@ -35,6 +35,7 @@ import {
   applyOp,
   classifyOp,
   defaultSettings,
+  migrateSettings,
   sanitizeSettings,
   splitDue,
 } from './lib/settings.js';
@@ -83,7 +84,9 @@ async function loadState() {
     chrome.storage.session.get(['ytTabs', 'ytExhausted', 'alive']),
   ]);
   const st = {
-    settings: local.settings ? sanitizeSettings(local.settings).settings : defaultSettings(),
+    settings: local.settings
+      ? migrateSettings(sanitizeSettings(local.settings).settings, local.settings.version)
+      : defaultSettings(),
     pending: Array.isArray(local.pending) ? local.pending.filter(isValidPending) : [],
     usage: isValidUsage(local.usage) ? local.usage : freshUsage(Date.now()),
     ytTabs: session.ytTabs || {},
@@ -497,6 +500,10 @@ const pageHandlers = {
       const typed = String(msg.typed || '').replace(/\s+/g, '');
       if (typed !== challenge.text) return { ok: false, error: 'The text does not match yet.' };
       await chrome.storage.session.remove('challenge');
+      if (st.settings.friction.delayHours === 0) {
+        st.settings = applyOp(st.settings, challenge.op);
+        return { ok: true, applied: true, summary: challenge.summary };
+      }
       // Measured from the latest time ever seen, so winding the clock back
       // before queueing does not shorten the wait.
       const createdAt = Math.max(now, st.usage.hwm || 0);

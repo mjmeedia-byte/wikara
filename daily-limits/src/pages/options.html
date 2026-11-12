@@ -12,8 +12,7 @@
         <h1>Daily Limits</h1>
         <p class="lede">
           Changes that make things stricter apply immediately. Changes that make things looser
-          (buttons ending in “…”) need a typing challenge and then wait
-          <span id="delayLabel">24 hours</span>.
+          (buttons ending in “…”) need a typing challenge<span id="delayLabel"></span>.
         </p>
       </header>
 
@@ -152,9 +151,8 @@
       <h2 id="chHeading">Type this text to continue</h2>
       <p id="chSummary" class="what"></p>
       <p class="muted">
-        When you finish, the change is queued and takes effect after
-        <span id="chDelay"></span>. You can cancel it any time before then. Capitals matter; spaces
-        and line breaks do not. Pasting is disabled.
+        <span id="chWhen"></span> Capitals matter; spaces and line breaks do not. Pasting is
+        disabled.
       </p>
       <canvas
         id="chCanvas"

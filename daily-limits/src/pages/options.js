@@ -244,7 +244,8 @@ function renderFriction() {
 function renderAll() {
   live.clear();
   $('dev').hidden = !state.dev;
-  $('delayLabel').textContent = fmtDelay(state.delayMs);
+  $('delayLabel').textContent =
+    state.delayMs > 0 ? ` and then wait ${fmtDelay(state.delayMs)}` : '';
   $('siteUnit').textContent = state.unitShort;
   renderPending();
   renderSites();
@@ -443,7 +444,11 @@ function openChallenge(res) {
   note('');
   challenge = { id: res.challenge.id, text: res.challenge.text };
   $('chSummary').textContent = `${res.summary}.`;
-  $('chDelay').textContent = fmtDelay(res.delayMs);
+  $('chWhen').textContent =
+    res.delayMs > 0
+      ? `When you finish, the change is queued and takes effect after ${fmtDelay(res.delayMs)}. You can cancel it any time before then.`
+      : 'When you finish, the change applies immediately.';
+  $('chSubmit').textContent = res.delayMs > 0 ? 'Queue change' : 'Apply change';
   input.value = '';
   lastValue = '';
   if (!dialog.open) dialog.showModal();
@@ -488,7 +493,11 @@ $('chSubmit').addEventListener('click', async () => {
   const res = await send({ type: 'confirm-op', id: challenge.id, typed: input.value });
   if (res && res.ok) {
     closeChallenge();
-    say(`Queued. Takes effect ${fmtDateTime(res.pending.applyAt)}.`);
+    say(
+      res.applied
+        ? `Done. ${res.summary}.`
+        : `Queued. Takes effect ${fmtDateTime(res.pending.applyAt)}.`,
+    );
     refresh();
     return;
   }

@@ -8,7 +8,7 @@ Run these with the developer flag on, so minutes last seconds.
 2. In `chrome://extensions` click the reload arrow on Daily Limits. Open YouTube tabs reload themselves.
 3. Open the popup. It should show "Developer fast mode is on".
 
-With the flag on: a limit of `20` lasts 20 seconds, warnings come at 5 and 1 seconds left, and the 24 hour delay is 1 minute.
+With the flag on: a limit of `20` lasts 20 seconds, warnings come at 5 and 1 seconds left, and each hour of loosening delay lasts 2.5 seconds (24 hours is 1 minute).
 
 Two things you will use below:
 
@@ -113,17 +113,21 @@ If any Shorts surface is still visible, the block still holds (clicking it lands
 ## 10. The loosening flow, start to finish
 
 - [ ] In Settings change a site's limit to a **lower** number. The button reads "Lower now" and the change applies at once.
-- [ ] Change it to a **higher** number. The button reads "Raise…". Click it. The typing dialog opens with 150 characters.
+- [ ] Change it to a **higher** number. The button reads "Raise…". Click it. The typing dialog opens with 10 characters and says the change applies immediately.
 - [ ] Try to select or copy the characters. You cannot: they are an image.
 - [ ] Copy any text elsewhere and paste into the box. Nothing is inserted.
-- [ ] Type a wrong character. The dialog says which character does not match, and "Queue change" stays disabled.
-- [ ] Type all 150 correctly. "Queue change" enables. Click it.
-- [ ] The change appears under **Pending changes** with a countdown of about one minute. The limit itself has **not** changed yet.
+- [ ] Type a wrong character. The dialog says which character does not match, and "Apply change" stays disabled.
+- [ ] Type all 10 correctly. "Apply change" enables. Click it. The new limit is in place straight away and nothing is pending.
+
+Now test the delay. Under **Friction** set the delay to `24` and click **Change…**, then type the challenge. With the developer flag on, 24 hours is one minute.
+
+- [ ] Raise a limit again. This time the dialog says the change is queued, and the button reads "Queue change".
+- [ ] After typing, the change appears under **Pending changes** with a countdown of about one minute. The limit itself has **not** changed yet.
 - [ ] Click **Cancel** on it. It disappears immediately and the limit never changes.
 - [ ] Repeat, and this time wait. When the countdown reaches zero the limit changes without you doing anything, and the pending entry disappears.
 - [ ] Each of these also opens the typing dialog: **Remove…** on a site, **Add channel…**, **Add site…** under Always allowed, **Change…** under Friction, **Import…**, **Reset to defaults…**.
 - [ ] Each of these applies at once with no dialog: adding a site, **Remove** on a channel, **Remove** on an always-allowed site.
-- [ ] Queue the removal of a site that has some time used, wait for it to apply, then add the site again. Its used time is still there.
+- [ ] Remove a site that has some time used, let the removal apply, then add the site again. Its used time is still there.
 - [ ] Close and reopen Chrome while a change is pending. It is still listed, with the same due time.
 
 ## 11. Incognito
@@ -135,4 +139,5 @@ If any Shorts surface is still visible, the block still holds (clicking it lands
 ## 12. Back to normal
 
 - [ ] Set `DEV_FAST_MODE = false` and reload the extension.
-- [ ] The banner is gone, limits read in minutes, and Settings says loosening waits 24 hours.
+- [ ] The banner is gone and limits read in minutes.
+- [ ] Set **Friction** back to the values you want for real use (10 characters and no delay is the default).

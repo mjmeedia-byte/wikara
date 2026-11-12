@@ -79,28 +79,29 @@ Open the popup and click **Settings**, or right-click the toolbar icon and choos
 
 Every change is one of two kinds.
 
-| Tightening (applies immediately)           | Loosening (typing challenge, then a delay) |
-| ------------------------------------------ | ------------------------------------------ |
-| Add a site                                 | Remove a site                              |
-| Lower a limit                              | Raise a limit                              |
-| Remove a channel from the educational list | Add a channel to the educational list      |
-| Remove a site from the always-allowed list | Add a site to the always-allowed list      |
-| Cancel a pending change                    | Change either friction setting, up or down |
-|                                            | Import settings, or reset to defaults      |
+| Tightening (applies immediately)           | Loosening (typing challenge, optional delay) |
+| ------------------------------------------ | -------------------------------------------- |
+| Add a site                                 | Remove a site                                |
+| Lower a limit                              | Raise a limit                                |
+| Remove a channel from the educational list | Add a channel to the educational list        |
+| Remove a site from the always-allowed list | Add a site to the always-allowed list        |
+| Cancel a pending change                    | Change either friction setting, up or down   |
+|                                            | Import settings, or reset to defaults        |
 
 Buttons that start a loosening change end in "…".
 
 A loosening change goes like this:
 
-1. A dialog shows 150 random characters, drawn as an image so they cannot be selected or copied. You type them exactly. Pasting, drag-and-drop and auto-fill are refused. Capitals matter; spaces and line breaks do not.
-2. The change is queued. It takes effect 24 hours later.
-3. Until then it sits under **Pending changes** with a countdown. Cancelling is immediate.
+1. A dialog shows 10 random characters, drawn as an image so they cannot be selected or copied. You type them exactly. Pasting, drag-and-drop and auto-fill are refused. Capitals matter; spaces and line breaks do not.
+2. The change applies as soon as you finish typing.
+
+That is the default: 10 characters and no delay. Under **Friction** you can make the challenge longer and add a delay of up to 168 hours. With a delay, a finished challenge queues the change instead: it sits under **Pending changes** with a countdown, takes effect when the delay runs out, and can be cancelled at once until then.
 
 There is no "five more minutes" button, no pause and no override, on the block page or anywhere else.
 
 Other details:
 
-- The challenge length (50–1000 characters) and the delay (1–168 hours) are settings. Changing them is itself a loosening change and uses the friction currently in force.
+- The challenge length (10–1000 characters) and the delay (0–168 hours) are settings. Changing them, in either direction, is itself a loosening change and uses the friction currently in force. With no delay, raising the friction takes effect at once; lowering it again later then costs the higher friction.
 - **Export** writes your settings to a JSON file and is free. **Import** and **Reset** replace everything, so they are loosening changes.
 - If you remove a site and add it back the same day, it keeps the time already used.
 - A pending change is applied as written when its time comes. If you queue "raise reddit.com to 60" and then lower it to 10, it still becomes 60 when the delay ends, unless you cancel it.
@@ -109,7 +110,7 @@ Other details:
 
 - Usage is stored against an absolute day window. The day only rolls over when the clock passes the stored midnight.
 - If the clock moves **backwards**, today's usage stays exactly as it was and nothing resets early. Setting the clock to 23:59 "yesterday" and waiting a minute does not reset anything.
-- The 24 hour delay is measured from the latest time the extension has ever seen, so winding the clock back before queueing a change does not shorten the wait.
+- If you set a delay, it is measured from the latest time the extension has ever seen, so winding the clock back before queueing a change does not shorten the wait.
 - Moving the clock **forwards** cannot be detected without an outside time source. See the next section.
 
 ## What this cannot stop
@@ -130,7 +131,7 @@ This is a speed bump for weak moments. It is not a lock. Each of these gets roun
 | Limited sites embedded inside other pages                                                                                           | Only the tab's own address is checked, so an embedded post or player from a limited site is not counted. YouTube embeds are the exception: they are replaced.              | Add the embedding site if it becomes a habit.                                                                                                                                                                                                                                              |
 | Videos an uploader has filed under Education or Science & Technology                                                                | They count as educational whatever they contain.                                                                                                                           | That is the rule as specified. To rely on the channel list only, empty `EDU_CATEGORIES` in `src/lib/rules.js`.                                                                                                                                                                             |
 | Silent viewing with no input on non-YouTube sites                                                                                   | After 60 seconds without keyboard or mouse you count as idle. A muted video on, say, Netflix then stops counting. On YouTube a playing video counts even when muted.       | Keep the sound on, or accept the gap.                                                                                                                                                                                                                                                      |
-| Queueing a loosening change ahead of time                                                                                           | It works, 24 hours later.                                                                                                                                                  | That is the design. The pending list keeps it visible, and cancelling is one click.                                                                                                                                                                                                        |
+| Loosening a limit                                                                                                                   | With the default friction (10 characters, no delay) a raised limit or removed site takes effect a few seconds after you decide to do it.                                   | Add a delay under **Friction**. Even a few hours turns a weak moment into a decision you have to make in advance, and the pending list keeps it visible.                                                                                                                                   |
 
 ## Known limits
 
@@ -186,7 +187,7 @@ The service worker is the only writer of state. It keeps nothing important in me
 `src/lib/config.js` has `DEV_FAST_MODE`, off by default. Set it to `true` and reload the extension to test quickly:
 
 - one "minute" of limit lasts one second (a limit of 20 is 20 seconds; warnings come at 5 and 1 seconds left);
-- the 24 hour delay becomes 1 minute;
+- each hour of loosening delay becomes 2.5 seconds (a 24 hour delay is 1 minute);
 - the worker ticks every second.
 
 The popup and options page show a banner while it is on. Set it back to `false` before real use. `TESTING.md` is a manual checklist built around this flag.

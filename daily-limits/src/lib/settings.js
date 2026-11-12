@@ -33,9 +33,33 @@ export const SEED_CHANNELS = [
 
 export const SEED_ALLOWED = ['khanacademy.org', 'wikipedia.org'];
 
+export const SETTINGS_VERSION = 2;
+
+// The friction every install had before version 2 changed the defaults.
+const V1_FRICTION = { challengeLength: 150, delayHours: 24 };
+
+/**
+ * Bring stored settings up to date. `fromVersion` is the version they were
+ * saved with. Version 2 lowered the default friction: an install still on the
+ * old defaults moves to the new ones; one that chose its own values keeps them.
+ */
+export function migrateSettings(settings, fromVersion) {
+  const s = structuredClone(settings);
+  const from = Number(fromVersion) || 1;
+  if (
+    from < 2 &&
+    s.friction.challengeLength === V1_FRICTION.challengeLength &&
+    s.friction.delayHours === V1_FRICTION.delayHours
+  ) {
+    s.friction = defaultSettings().friction;
+  }
+  s.version = SETTINGS_VERSION;
+  return s;
+}
+
 export function defaultSettings() {
   return {
-    version: 1,
+    version: SETTINGS_VERSION,
     sites: {},
     ytLimit: 30,
     eduChannels: SEED_CHANNELS.map((c) => ({ ...c })),

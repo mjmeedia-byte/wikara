@@ -46,6 +46,7 @@ export const REANCHOR_MS = 36 * 3_600_000;
 
 export const LIMIT_MAX = 1440;
 export const FRICTION_BOUNDS = {
-  challengeLength: { min: 50, max: 1000, default: 150 },
-  delayHours: { min: 1, max: 168, default: 24 },
+  challengeLength: { min: 10, max: 1000, default: 10 },
+  // A delay of 0 applies a loosening change as soon as the challenge is typed.
+  delayHours: { min: 0, max: 168, default: 0 },
 };
